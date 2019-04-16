@@ -1,0 +1,149 @@
+
+.w-modal {
+    /* disable global scrolling when m1ks are visible */
+    overflow: hidden;
+    height: 100vh;
+}
+
+.modal {
+    display: none;
+
+    /* dimensions: spanning the background from edge to edge */
+    position:fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: 1043; /* z-index needs to be >= elements on the site. */
+
+    /* position: centering content */
+    text-align: center;
+
+    /* insures that the ::before pseudo element doesn't force wrap with fixed width content; */
+    white-space: nowrap;
+
+    /* styling */
+    cursor: pointer;
+    background: #333;
+
+    background: rgba(0, 0, 0, 0.8);
+    will-change: transform;
+}
+
+.modal__open {
+    display: block;
+}
+
+/* support for nested modals. Does not work in IE8 (use JS to fix) */
+.modal:last-of-type {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.modal:before {
+    /* position: trick to center content vertically */
+    content: '';
+    display: inline-block;
+    height: 55%;
+    vertical-align: middle;
+}
+
+.modal__content {
+    /* make content container for positioned elements (close button) */
+    position: relative;
+
+    /* position: centering vertical and horizontal */
+    text-align: left;
+    vertical-align: middle;
+    display: inline-block;
+
+    overflow: auto;
+    /*padding: 25px 25px 0;*/
+
+    /* dimensions: handling large content */
+    margin-left: 5%;
+    margin-right: 5%;
+    max-height: 95%;
+
+    /* styling */
+    background: #fff;
+    cursor: auto;
+
+    /* reset white-space wrapping */
+    white-space: normal;
+}
+
+.modal__close {
+    /* position: centering vertical and horizontal */
+    position: absolute;
+    z-index: 1044;
+    top: 0;
+    right: 0;
+
+    line-height: 27px;
+    width: 27px;
+    font-size: 21px;
+
+    cursor: pointer;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    color: #000;
+    padding: 0;
+
+    background: transparent;
+    border: 0;
+}
+
+.modal__close:before {
+    content: "\2715";
+}
+
+.modal__close:hover {
+    transform: scale(1.05);
+}
+
+.modal__close:focus {
+    outline: none;
+}
+.modal__close::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+.modal * {
+    box-sizing: border-box;
+}
+
+
+.modal[aria-hidden="false"] {
+    animation: tmfadeIn .6s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+
+.modal[aria-hidden="true"]  {
+    animation: tmfadeOut .6s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+
+@keyframes tmfadeIn {
+    from {
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0.95;
+    }
+    to {
+        background: rgba(0, 0, 0, 0.8);
+        opacity: 1;
+    }
+}
+
+@keyframes tmfadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* handling phones and small screens */
+@media only screen and (max-width: 1024px) {
+    .modal-content {
+        /* dimensions: maximize lightbox with for small screens */
+        margin-left: 0;
+        margin-right: 0;
+        max-height: 98%;
+        border-bottom: 10px solid transparent;
+    }
+}

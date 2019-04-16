@@ -1,0 +1,38 @@
+{
+  "name": "tinymodal",
+  "version": "0.0.1",
+  "description": "Tiny javascript module for modal windows.",
+  "main": "tinymodal.js",
+  "style": "tinymodal.css",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/levmorozov/tinymodal.git"
+  },
+  "keywords": [
+    "modal",
+    "popup",
+    "minimal",
+    "simple",
+    "small",
+    "fast",
+    "lightweight"
+  ],
+  "author": "Lev Morozov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/levmorozov/tinymodal/issues"
+  },
+  "homepage": "https://github.com/levmorozov/tinymodal#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglifycss": "^1.0.8"
+  }
+}
