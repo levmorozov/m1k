@@ -1,5 +1,5 @@
 {
-  "name": "tinymodal",
+  "name": "tinymodal.js",
   "version": "0.0.1",
   "description": "Tiny javascript module for modal windows.",
   "main": "tinymodal.js",
@@ -21,6 +21,7 @@
     "simple",
     "small",
     "fast",
+    "a11y",
     "lightweight"
   ],
   "author": "Lev Morozov",
