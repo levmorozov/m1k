@@ -13,8 +13,8 @@ Install
 __________
 
 ```
-    npm install m1k.js --save // via npm
-    yarn add m1k.js --save // via yarn
+    npm install m1k --save // via npm
+    yarn add m1k --save // via yarn
 ```
 
 Example
