@@ -97,8 +97,6 @@
 
         this.shown = true;
 
-        this.o.onBeforeOpen.call(this.m);
-
         document.body.classList.add('w-modal'); // add class to body to disable scrollbars
 
         // Remember focus:
