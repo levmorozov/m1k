@@ -1,6 +1,6 @@
 {
   "name": "m1k",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tiny javascript module for modal windows.",
   "main": "m1k.js",
   "style": "m1k.css",
