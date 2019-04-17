@@ -4,15 +4,15 @@ var rename = require('gulp-rename');
 var uglifycss = require("gulp-uglifycss");
 
 gulp.task('default', function(done) {
-    gulp.src('src/tinymodal.js')
+    gulp.src('src/m1k.js')
         .pipe(gulp.dest('./dist/'))
         .pipe(uglify())
-        .pipe(rename('tinymodal.min.js'))
+        .pipe(rename('m1k.min.js'))
         .pipe(gulp.dest('./dist/'));
-    gulp.src('src/tinymodal.css')
+    gulp.src('src/m1k.css')
         .pipe(gulp.dest('./dist/'))
         .pipe(uglifycss())
-        .pipe(rename('tinymodal.min.css'))
+        .pipe(rename('m1k.min.css'))
         .pipe(gulp.dest('./dist/'));
     done()
 });

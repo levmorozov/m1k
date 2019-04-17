@@ -1,9 +1,9 @@
 {
-  "name": "tinymodal.js",
+  "name": "m1k",
   "version": "0.0.1",
   "description": "Tiny javascript module for modal windows.",
-  "main": "tinymodal.js",
-  "style": "tinymodal.css",
+  "main": "m1k.js",
+  "style": "m1k.css",
   "directories": {
     "example": "examples"
   },
@@ -12,24 +12,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/levmorozov/tinymodal.git"
+    "url": "git+https://github.com/levmorozov/m1k.git"
   },
   "keywords": [
     "modal",
+    "a11y",
     "popup",
     "minimal",
     "simple",
     "small",
     "fast",
-    "a11y",
     "lightweight"
   ],
   "author": "Lev Morozov",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/levmorozov/tinymodal/issues"
+    "url": "https://github.com/levmorozov/m1k/issues"
   },
-  "homepage": "https://github.com/levmorozov/tinymodal#readme",
+  "homepage": "https://github.com/levmorozov/m1k#readme",
   "devDependencies": {
     "gulp": "^4.0.0",
     "gulp-rename": "^1.2.2",

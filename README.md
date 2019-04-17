@@ -1,28 +1,23 @@
-Tinymodal
+m1k
 ============
 
-Super tiny vanilla js module for modal windows. JS size 2290 bytes minified, 920 bytes gziped.
+Tiny vanilla js module for modal windows. JS size 2.1k minified, 906 bytes gziped.
 
 
-Main Ideas
-----------
-* No images, iframes, etc. Only html content
-* Real modal window (no scrolling!)
-* CSS should be outside code
+* No dependencies 
 * A11Y
-* ~1-2kb of gziped JS+CSS are enough for modal window plugin
-* There may be more than one modal window. Supports nested windows.
+* Tiny
 * Supports any modern browsers
 
 Install
 __________
 
 ```
-    npm install tinymodal.js --save // via npm
-    yarn add tinymodal.js --save // via yarn
+    npm install m1k.js --save // via npm
+    yarn add m1k.js --save // via yarn
 ```
 
-Examples
+Example
 ----------
 
 
@@ -42,7 +37,7 @@ Examples
 
 ```javascript
 
-    let modal = new Tinymodal('popup-example');
+    let modal = new Modal('popup-example');
     document.getElementById('test-modal-link1').onclick = function() {
         modal.show();
         return false;

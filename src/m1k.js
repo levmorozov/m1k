@@ -12,14 +12,12 @@
         'embed',
         '[contenteditable]',
         '[tabindex]:not([tabindex^="-"])'
-    ];
+    ], oldFocus;
 
     function extend() {
         var args = arguments,
             length = args.length;
         for (var i = 1; i < length; i++) {
-            //if (!arguments[i])
-              //  continue;
             for (var key in args[i]) {
                 if (args[i].hasOwnProperty(key)) {
                     args[0][key] = args[i][key]
@@ -29,14 +27,12 @@
         return args[0]
     }
 
-
-    window.Tinymodal = function(sel, options) {
+    window.Modal = function(sel, options) {
         var defaults = {
             id: sel,
-            onClose: function() {},
             onOpen: function() {},
-            onBeforeOpen: function() {},
-            onBeforeClose: function() {},
+            onClose: function() {},
+            onBeforeClose: function() {return true},
             esc : true,
             click : true,
         };
@@ -56,17 +52,20 @@
         };
 
         self.onKeydown = function(event) {
-            if (event.keyCode === 27 && self.o.esc) self.close(event);
-            if (event.keyCode === 9) self.maintainFocus(event);
+            if (event.keyCode === 27 && self.o.esc && self.shown) self.close(event);
+            if (event.keyCode === 9 && self.shown) self.maintainFocus(event);
         };
+
 
         self.maintainFocus = function(event)
         {
             var focusableNodes = focusableNodes || self.getFocusableNodes();
 
-            // if disableFocus is true
+            // if focus currently not in the modal
             if (!self.m.contains(document.activeElement) && focusableNodes.length) {
-                focusableNodes[0].focus()
+                var focused = self.m.querySelector('[autofocus]') || focusableNodes[0];
+                if (focused)
+                    focused.focus();
             } else {
                 var focusedItemIndex = focusableNodes.indexOf(document.activeElement)
 
@@ -91,22 +90,22 @@
         }
     };
 
-    Tinymodal.prototype.show = function() {
+    Modal.prototype.show = function() {
 
-        if(this.open)
+        if(this.shown)
             return;
 
-        this.open = true;
+        this.shown = true;
 
         this.o.onBeforeOpen.call(this.m);
 
         document.body.classList.add('w-modal'); // add class to body to disable scrollbars
 
         // Remember focus:
-        this.oldFocus = document.activeElement
+        oldFocus = document.activeElement
 
-        if (this.oldFocus.blur) {
-            this.oldFocus.blur();
+        if (oldFocus.blur) {
+            oldFocus.blur();
         }
 
         this.m.classList.add('modal__open');
@@ -116,27 +115,21 @@
         this.m.addEventListener('click', this.onClick);
         document.addEventListener('keydown', this.onKeydown);
 
-        this.o.onOpen.call(this.m);
         this.maintainFocus();
+        this.o.onOpen.call(this.m);
     }
 
 
 
-    Tinymodal.prototype.close = function(e) {
+    Modal.prototype.close = function(e) {
 
-        if (typeof this.o.beforeClose === 'function') {
-            var close = this.o.beforeClose.call(this.m);
-            if (!close) {
-                this._busy(false);
-                return;
-            }
-        }
+        if(!this.o.onBeforeClose.call(this.m))
+            return;
 
         this.m.setAttribute('aria-hidden', true);
-        this.m.classList.remove('modal__open');
 
         // Restore focus
-        if(self.oldFocus) self.oldFocus.focus();
+        if(oldFocus) oldFocus.focus();
 
         this.m.removeEventListener('touchstart', this.onClick);
         this.m.removeEventListener('click', this.onClick);
@@ -144,9 +137,9 @@
 
         // Restore scroll
         document.body.classList.remove('w-modal');
+        m.classList.remove('modal__open');
+        this.shown = false;
         this.o.onClose.call(this.m);
-
-        this.open = false;
     };
 
 })(document, window);
