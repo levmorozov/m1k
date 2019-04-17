@@ -135,7 +135,7 @@
 
         // Restore scroll
         document.body.classList.remove('w-modal');
-        m.classList.remove('modal__open');
+        this.m.classList.remove('modal__open');
         this.shown = false;
         this.o.onClose.call(this.m);
     };

@@ -25,8 +25,8 @@ Example
 <a href="#" id="some-link">Open popup</a>
 
 
-<div class="modal modal-hidden" id="popup-example" aria-hidden="true">
-    <div class="modal-content">
+<div class="modal" id="popup-example" aria-hidden="true">
+    <div class="modal__content">
         <button class="modal-close" data-modal-close></button>
 
         Modal window content here.
