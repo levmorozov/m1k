@@ -62,7 +62,7 @@
             var focusableNodes = focusableNodes || self.getFocusableNodes();
 
             // if focus currently not in the modal
-            if (!self.m.contains(document.activeElement) && focusableNodes.length) {
+            if (!event || !self.m.contains(document.activeElement) && focusableNodes.length) {
                 var focused = self.m.querySelector('[autofocus]') || focusableNodes[0];
                 if (focused)
                     focused.focus();
