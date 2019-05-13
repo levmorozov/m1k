@@ -53,6 +53,10 @@ List of options with default values:
 {
     single: false,    // Close other modal windows when open new window
     esc: true,        // Close window on esc
-    click: true,      // Close window on click in back
+    click: true,      // Close window on click in back,
+    // Callbacks:
+    onShow: function() {}, 
+    onHide: function() {},
+    onBeforeHide: function() {return true}
 }
 ```

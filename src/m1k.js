@@ -1,4 +1,4 @@
-(function(document, window) {
+(function(document) {
 
     var FOCUSABLE_ELEMENTS = [
         'a[href]',
@@ -15,44 +15,41 @@
     ], oldFocus;
 
     function extend() {
-        var args = arguments,
-            length = args.length;
-        for (var i = 1; i < length; i++) {
+        var args = arguments;
+        for (var i = 1; i < args.length; i++) {
             for (var key in args[i]) {
-                if (args[i].hasOwnProperty(key)) {
-                    args[0][key] = args[i][key]
-                }
+                args[0][key] = args[i][key]
             }
         }
         return args[0]
     }
 
     window.Modal = function(sel, options) {
-        var defaults = {
-            id: sel,
-            onOpen: function() {},
-            onClose: function() {},
-            onBeforeClose: function() {return true},
-            esc : true,
-            click : true,
-        };
 
         var self = this;
 
-        self.open = false;
-        self.o = extend({}, defaults, options);
+        self.shown = false;
+        self.o = extend({}, {
+            id: sel,
+            onShow: function() {},
+            onHide: function() {},
+            onBeforeHide: function() {return true},
+            esc : true,
+            click : true,
+        }, options);
+
         self.m = typeof sel === 'string' ? document.getElementById(sel) : sel;
 
         self.onClick = function(event) {
             if(event.target.hasAttribute('data-modal-close') ||
-                (event.target.classList.contains('modal__open') && self.o.click)) {
-                self.close();
+                (self.m.isEqualNode(event.target) && self.o.click)) {
+                self.hide(event);
                 event.preventDefault();
             }
         };
 
         self.onKeydown = function(event) {
-            if (event.keyCode === 27 && self.o.esc && self.shown) self.close(event);
+            if (event.keyCode === 27 && self.o.esc && self.shown) self.hide(event);
             if (event.keyCode === 9 && self.shown) self.maintainFocus(event);
         };
 
@@ -91,11 +88,12 @@
     };
 
     Modal.prototype.show = function() {
+        var self = this;
 
-        if(this.shown)
+        if(self.shown)
             return;
 
-        this.shown = true;
+        self.shown = true;
 
         document.body.classList.add('w-modal'); // add class to body to disable scrollbars
 
@@ -106,38 +104,45 @@
             oldFocus.blur();
         }
 
-        this.m.classList.add('modal__open');
-        this.m.setAttribute('aria-hidden', false);
+        self.m.setAttribute('aria-hidden', false);
 
-        this.m.addEventListener('touchstart', this.onClick);
-        this.m.addEventListener('click', this.onClick);
-        document.addEventListener('keydown', this.onKeydown);
+        self.m.addEventListener('touchstart', self.onClick);
+        self.m.onclick = self.onClick;
+        document.addEventListener('keydown', self.onKeydown);
 
-        this.maintainFocus();
-        this.o.onOpen.call(this.m);
+        self.m.classList.add('modal__open');
+
+        self.maintainFocus();
+
+        self.o.onShow.call(self.m);
     }
 
 
+    Modal.prototype.hide = function(e) {
+        var self = this;
 
-    Modal.prototype.close = function(e) {
-
-        if(!this.o.onBeforeClose.call(this.m))
+        if(!self.o.onBeforeHide.call(self.m, e))
             return;
 
-        this.m.setAttribute('aria-hidden', true);
+        self.m.setAttribute('aria-hidden', true);
 
         // Restore focus
         if(oldFocus) oldFocus.focus();
 
-        this.m.removeEventListener('touchstart', this.onClick);
-        this.m.removeEventListener('click', this.onClick);
-        document.removeEventListener('keydown', this.onKeydown);
+        self.m.removeEventListener('touchstart', self.onClick);
+        self.m.onclick = null;
+        document.removeEventListener('keydown', self.onKeydown);
 
         // Restore scroll
         document.body.classList.remove('w-modal');
-        this.m.classList.remove('modal__open');
-        this.shown = false;
-        this.o.onClose.call(this.m);
+
+        self.m.classList.remove('modal__open');
+        self.shown = false;
+        self.o.onHide.call(self.m, e);
     };
 
-})(document, window);
+    Modal.prototype.container = function() {
+        return this.m;
+    }
+
+})(document);
