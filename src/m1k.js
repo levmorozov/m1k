@@ -1,14 +1,12 @@
-(function(document) {
+(function (document) {
 
     var FOCUSABLE_ELEMENTS = [
         'a[href]',
-        'area[href]',
         'input:not([disabled]):not([type="hidden"]):not([aria-hidden])',
         'select:not([disabled]):not([aria-hidden])',
         'textarea:not([disabled]):not([aria-hidden])',
         'button:not([disabled]):not([aria-hidden])',
         'iframe',
-        'object',
         'embed',
         '[contenteditable]',
         '[tabindex]:not([tabindex^="-"])'
@@ -24,43 +22,35 @@
         return args[0]
     }
 
-    window.Modal = function(sel, options) {
+    function noop() { return true }
 
-        var self = this;
+    window.Modal = function (sel, options) {
 
-        self.shown = false;
-        self.o = extend({}, {
-            id: sel,
-            onShow: function() {},
-            onHide: function() {},
-            onBeforeHide: function() {return true},
-            esc : true,
-            click : true,
+        var shown = false;
+        var opts = extend({}, {
+            onShow: noop,
+            onHide: noop,
+            esc: true,
+            click: true,
         }, options);
 
-        self.m = typeof sel === 'string' ? document.getElementById(sel) : sel;
+        var modal = typeof sel === 'string' ? document.getElementById(sel) : sel;
 
-        self.onClick = function(event) {
-            if(event.target.hasAttribute('data-modal-close') ||
-                (self.m.isEqualNode(event.target) && self.o.click)) {
-                self.hide(event);
-                event.preventDefault();
-            }
-        };
+        function onKeydown(event) {
+            if (event.keyCode === 27 && opts.esc && shown) hide(event);
+            if (event.keyCode === 9 && shown) maintainFocus(event);
+        }
 
-        self.onKeydown = function(event) {
-            if (event.keyCode === 27 && self.o.esc && self.shown) self.hide(event);
-            if (event.keyCode === 9 && self.shown) self.maintainFocus(event);
-        };
+        function maintainFocus(event) {
+            var focusableNodes = focusableNodes ||
+                Array.prototype.slice.call(modal.querySelectorAll(FOCUSABLE_ELEMENTS));
 
-
-        self.maintainFocus = function(event)
-        {
-            var focusableNodes = focusableNodes || self.getFocusableNodes();
+            if (!focusableNodes.length)
+                return;
 
             // if focus currently not in the modal
-            if (!event || !self.m.contains(document.activeElement) && focusableNodes.length) {
-                var focused = self.m.querySelector('[autofocus]') || focusableNodes[0];
+            if (!event || !modal.contains(document.activeElement) && focusableNodes.length) {
+                var focused = modal.querySelector('[autofocus]') || focusableNodes[0];
                 if (focused)
                     focused.focus();
             } else {
@@ -76,73 +66,63 @@
                     event.preventDefault()
                 }
             }
-        };
-
-        self.getFocusableNodes = function () {
-            var nodes = self.m.querySelectorAll(FOCUSABLE_ELEMENTS);
-
-            return Object.keys(nodes).map(function (key) {
-                return nodes[key];
-            });
-        }
-    };
-
-    Modal.prototype.show = function() {
-        var self = this;
-
-        if(self.shown)
-            return;
-
-        self.shown = true;
-
-        document.body.classList.add('w-modal'); // add class to body to disable scrollbars
-
-        // Remember focus:
-        oldFocus = document.activeElement
-
-        if (oldFocus.blur) {
-            oldFocus.blur();
         }
 
-        self.m.setAttribute('aria-hidden', false);
+        function show() {
+            if (shown)
+                return;
 
-        self.m.addEventListener('touchstart', self.onClick);
-        self.m.onclick = self.onClick;
-        document.addEventListener('keydown', self.onKeydown);
+            shown = true;
 
-        self.m.classList.add('modal__open');
+            document.body.classList.add('w-modal'); // add class to body to disable scrollbars
 
-        self.maintainFocus();
+            // Remember focus:
+            oldFocus = document.activeElement
 
-        self.o.onShow.call(self.m);
-    }
+            if (oldFocus.blur) {
+                oldFocus.blur();
+            }
 
+            modal.setAttribute('aria-hidden', false);
 
-    Modal.prototype.hide = function(e) {
-        var self = this;
+            modal.onclick = function (event) {
+                if (event.target.hasAttribute('data-modal-close') ||
+                    (modal.isEqualNode(event.target) && opts.click)) {
+                    hide(event);
+                    event.preventDefault();
+                }
+            };
+            document.addEventListener('keydown', onKeydown);
 
-        if(!self.o.onBeforeHide.call(self.m, e))
-            return;
+            modal.classList.add('modal__open');
 
-        self.m.setAttribute('aria-hidden', true);
+            maintainFocus();
 
-        // Restore focus
-        if(oldFocus) oldFocus.focus();
+            opts.onShow.call(modal);
+        }
 
-        self.m.removeEventListener('touchstart', self.onClick);
-        self.m.onclick = null;
-        document.removeEventListener('keydown', self.onKeydown);
+        function hide(e) {
+            if (!opts.onHide.call(modal, e))
+                return;
 
-        // Restore scroll
-        document.body.classList.remove('w-modal');
+            modal.setAttribute('aria-hidden', true);
 
-        self.m.classList.remove('modal__open');
-        self.shown = false;
-        self.o.onHide.call(self.m, e);
+            // Restore focus
+            if (oldFocus) oldFocus.focus();
+
+            document.removeEventListener('keydown', onKeydown);
+
+            // Restore scroll
+            document.body.classList.remove('w-modal');
+
+            modal.classList.remove('modal__open');
+            shown = false;
+        }
+
+        return {
+            show: show,
+            hide: hide
+        }
     };
-
-    Modal.prototype.container = function() {
-        return this.m;
-    }
 
 })(document);

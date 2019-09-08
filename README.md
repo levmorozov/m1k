@@ -1,7 +1,7 @@
 m1k
 ============
 
-Tiny vanilla js module for modal windows. JS size 2.1k minified, 906 bytes gziped.
+Tiny vanilla js module for modal windows. JS size 1.5k minified, 756 bytes gziped.
 
 
 * No dependencies 
