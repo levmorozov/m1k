@@ -13,9 +13,6 @@
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: 1043; /* z-index needs to be >= elements on the site. */
 
-    /* position: centering content */
-    text-align: center;
-
     /* insures that the ::before pseudo element doesn't force wrap with fixed width content; */
     white-space: nowrap;
 
@@ -25,23 +22,19 @@
 
     background: rgba(0, 0, 0, 0.8);
     will-change: transform;
+
+    /* position: centering content */
+    justify-content: center;
+    align-items: center;
 }
 
 .modal__open {
-    display: block;
+    display: flex;
 }
 
 /* support for nested modals. Does not work in IE8 (use JS to fix) */
 .modal:last-of-type {
     background: rgba(0, 0, 0, 0.8);
-}
-
-.modal:before {
-    /* position: trick to center content vertically */
-    content: '';
-    display: inline-block;
-    height: 75%;
-    vertical-align: middle;
 }
 
 .modal__content {
@@ -61,6 +54,8 @@
     margin-right: 5%;
     max-height: 95%;
 
+    border-radius: 4px;
+
     box-sizing: border-box;
 
     /* styling */
@@ -69,6 +64,13 @@
 
     /* reset white-space wrapping */
     white-space: normal;
+}
+
+@media screen and (max-width: 600px) {
+    .modal__content {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
 
 .modal__close {
